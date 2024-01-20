@@ -17,6 +17,9 @@ function generateMarkdown(data) {
   // Description from user input
   literal += '## Description\n' + data.description + '\n\n';
 
+  // If there is a screenshot, put it here
+  if (data.image) literal += `![screenshot](./assets/images/${data.image})\n\n`;
+
   // add a TOC with three optional TOC items
   literal +=
     `## Table of Contents
@@ -44,8 +47,6 @@ Reach out if you have questions that are not covered here!
 - email: ${data.email}
 
 `
-
-
   // Add the Contribution and Testing sections if necessary
   if (data.contribute) {
     literal += `## Contribution Guidelines

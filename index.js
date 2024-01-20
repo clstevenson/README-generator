@@ -2,21 +2,37 @@
 const inquirer = require('inquirer');
 const fs = require('fs');
 // below is a "local" require not from npm
-const generateMarkdown = require('./utils/generateMarkdown')
+const generateMarkdown = require('./utils/generateMarkdown');
 
 // Function to write README file in a separate subdirectory
 function writeToFile(fileName, data) {
   const outputDir = './output'
+  const imgDir = './output/assets/images'
+  let imgFileName = '';
 
   // separate directory for generated READMEs
   if (!fs.existsSync(outputDir)) {
     fs.mkdirSync(outputDir);
   }
 
+  // save the MD file
   fileName = outputDir + '/' + fileName;
-  fs.writeFile(fileName, generateMarkdown(data), err => {
-    if (err) console.log(err);
+  fs.writeFileSync(fileName, generateMarkdown(data), err => {
+    if (err) {
+      console.log(err);
+      return err;
+    }
   });
+
+  // if there is a screenshot, save it too
+  // somehow this isn't working
+  if (data.image) {
+    if (!fs.existsSync(imgDir)) {
+      fs.mkdirSync(imgDir, {recursive: true});
+    }
+    imgFileName = imgDir + '/' + data.image;
+    fs.copyFileSync(data.image, imgFileName);
+  }
 }
 
 // Function to initialize app
@@ -30,21 +46,25 @@ function init() {
     usage: 'Explain how the project is used.',
     github: 'GitHub user name:',
     email: 'Email:',
+    image: 'Screenshot (leave blank to omit):',
+    video: 'Video (leave blank to omit):',
     contribute: 'Contribution instructions (leave blank to omit):',
     test: 'Testing instructions (leave blank to omit):'
   };
 
   // prompt for input using inquirer
   inquirer.prompt([
-    {type: 'input', name: 'title', message: prompt.title,
+    {type: 'input', name: 'title', message: prompt.title, default: "My Project",
      validate: value => {
        if (!value) return "A project title is required.";
        else return true;
      }
     },
     {type: 'editor', name: 'description', message: prompt.description,
+     default: 'Description placeholder',
+     postfix: '.md',
      validate: value => {
-       if (!value) return "A description is required. Did you quit the editor before saving? (:wq in vim)";
+       if (!value) return "Blank descriptions not allowed";
        else return true;
      }
     },
@@ -52,15 +72,26 @@ function init() {
       choices: ['MIT', 'Apache', 'BSD2', 'BSD3', 'ISC', 'GPLv3', 'none'],
     },
     {type: 'editor', name: 'installation', prompt: prompt.installation,
+     default: 'Placeholder for node.js apps: clone or download, open a terminal in the app directory, and type "npm install." ',
+     postfix: '.md',
      validate: value => {
-       if (!value) return "Installation instructions are required. Did you quit the editor before saving? (:wq in vim)";
+       if (!value) return "Blank installation instructions not allowed";
        else return true;
      }
     },
     {type: 'editor', name: 'usage', message: prompt.usage,
+     default: 'Usage placeholder',
+     postfix: '.md',
      validate: value => {
-       if (!value) return "A description of app usage is required. Did you quit the editor before saving? (:wq in vim)";
+       if (!value) return "Blank usage instructions not allowed";
        else return true;
+     }
+    },
+    {type: 'input', name: 'image', message: prompt.image,
+     validate: value => {
+       if (value && !fs.existsSync(value)) {
+         return "Couldn't find image. Check spelling and verify it is in this directory."
+       } else return true;
      }
     },
     {type: 'input', name: 'github', message: prompt.github,},
@@ -71,8 +102,10 @@ function init() {
     .then(data => {
       const filename = data.title.split(' ').join('') + "-README.md";
       if (data.license === 'none') data.license = '';
-      writeToFile(filename, data);
-    });
+      const err = writeToFile(filename, data);
+      if (!err) console.log("Success! README and any image/video files are in the Output directory.");
+    })
+    .catch(err => console.log(err));
 }
 
 // Function call to initialize app
