@@ -39,6 +39,8 @@ function writeToFile(fileName, data) {
 function init() {
   const filename = data.title.split(' ').join('') + "-README.md";
   writeToFile(filename, data);
+    {type: 'list', name: 'license', message: prompt.license,
+      choices: ['MIT', 'Apache', 'BSD2', 'BSD3', 'ISC', 'GPLv3', 'none'],
 }
 
 // Function call to initialize app

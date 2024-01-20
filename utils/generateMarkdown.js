@@ -78,6 +78,7 @@ function renderLicenseBadge(license) {
     case 'BSD2': return '[![License](https://img.shields.io/badge/License-BSD_2--Clause-orange.svg)](https://opensource.org/licenses/BSD-2-Clause)\n\n';
     case 'BSD3': return '[![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)\n\n';
     case 'GPLv3': return '[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)\n\n';
+    case 'ISC': return '[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)\n\n';
     default: return '';
   }
 }
@@ -88,9 +89,10 @@ function renderLicenseLink(license) {
   switch(license) {
     case 'MIT': return '[MIT license](https://opensource.org/licenses/MIT)';
     case 'Apache': return '[Apache 2.0 license](https://opensource.org/licenses/Apache-2.0)';
-    case 'BSD2': return '[BSD 2-clause license](https://opensource.org/licenses/BSD-2-Clause)';
-    case 'BSD3': return '[BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause)';
-    case 'GPLv3': return '[GPL 3 license](https://www.gnu.org/licenses/gpl-3.0)\n\n';
+    case 'BSD2': return '[BSD 2-clause ("simplified") license](https://opensource.org/licenses/BSD-2-Clause)';
+    case 'BSD3': return '[BSD 3-clause ("new") license](https://opensource.org/licenses/BSD-3-Clause)';
+    case 'GPLv3': return '[GPL 3 license](https://www.gnu.org/licenses/gpl-3.0)';
+    case 'ISC': return '[ISC license](https://opensource.org/licenses/ISC)\n\n';
     default: return '';
   }
 }
