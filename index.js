@@ -18,14 +18,27 @@ data.usage = 'Download, run "node index.js" and then open README.md';
 data.github = 'clstevenson';
 data.email = 'chrislstevenson@gmail.com';
 data.contribute = 'submit a pull request';
-data.test = 'run the following tests.';
+// data.test = 'run the following tests.';
 
-// TODO: Create a function to write README file
-function writeToFile(fileName, data) {}
+// Function to write README file in a separate subdirectory
+function writeToFile(fileName, data) {
+  const outputDir = './output'
+
+  // separate directory for generated READMEs
+  if (!fs.existsSync(outputDir)) {
+    fs.mkdirSync(outputDir);
+  }
+
+  fileName = outputDir + '/' + fileName;
+  fs.writeFile(fileName, generateMarkdown(data), err => {
+    if (err) console.log(err);
+  });
+}
 
 // TODO: Create a function to initialize app
 function init() {
-  console.log(generateMarkdown(data));
+  const filename = data.title.split(' ').join('') + "-README.md";
+  writeToFile(filename, data);
 }
 
 // Function call to initialize app
