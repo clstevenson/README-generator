@@ -1,18 +1,20 @@
+///////////////////////////////////////////////////////////////////////////////
+//                        Module to generate README.md                       //
+///////////////////////////////////////////////////////////////////////////////
+
 /*
- * All prompts (and user responses) will be in index.js and passed to this file thru the data object
- * That includes license choice, presumably as data.license.
+ * All prompts (and user responses) will be in the calling app and passed
+ * to this module function thru a data object containing user responses/info
  */
 
-// function to generate markdown for README; this is a public function exported to an application
+// Function to generate markdown for REAME. This is a public function exported to the calling app.
 function generateMarkdown(data) {
   // literal value will initialized and modified based on user responses
   let literal = `# ${data.title}\n\n`;
 
-
-  // add license badge if data.license is not an empty string using renderLicenseBadge()
-  if (data.license) {
-    literal += renderLicenseBadge(data.license);
-  }
+  // add license badge if data.license is not an empty string
+  // Uses proviate helper function renderLicenseBadge()
+  if (data.license) literal += renderLicenseBadge(data.license);
 
   // Description from user input
   literal += '## Description\n' + data.description + '\n\n';
@@ -32,7 +34,7 @@ function generateMarkdown(data) {
   // add some space
   literal += '\n\n'
 
-  // Add obligatory sections: Installation, Usage, Questions/contact
+  // Add obligatory sections: Installation, Usage, Questions/Contact info
   literal +=
     `## Installation
 ${data.installation}
@@ -63,14 +65,12 @@ ${data.test}
   };
 
   // Add license section if necessary
-  if (data.license) {
-    literal += '## License\n' + renderLicenseSection(data.license);
-  }
+  if (data.license) literal += '## License\n' + renderLicenseSection(data.license);
 
   return literal;
-} // end generateMarkdown() function
+} // end public generateMarkdown() function
 
-// Private function returns a license badge based on which license is passed in (or empty string if no license)
+// Private helper function returns a license badge based on which license is passed in (or empty string if no license)
 // Badges obtained from https://gist.github.com/lukas-h/2a5d00690736b4c3a7ba
 function renderLicenseBadge(license) {
   switch(license) {
@@ -84,8 +84,7 @@ function renderLicenseBadge(license) {
   }
 }
 
-// Private function that returns the license link
-// If there is no license, return an empty string
+// Private helper function that returns the license MD link (or empty string if no license)
 function renderLicenseLink(license) {
   switch(license) {
     case 'MIT': return '[MIT license](https://opensource.org/licenses/MIT)';
@@ -98,14 +97,11 @@ function renderLicenseLink(license) {
   }
 }
 
-// Private function that returns the license section of README
-// If there is no license, return an empty string
+// Private function that returns the license section of README (or empty string if no license)
 function renderLicenseSection(license) {
-  if (license) {
-    return 'This project is licensed under the terms of the ' + renderLicenseLink(license) + '.';
-  } else {
-    return '';
-  }
+  if (license) return 'This project is licensed under the terms of the ' + renderLicenseLink(license) + '.';
+  else return '';
 }
 
+// only the main function is exported
 module.exports = generateMarkdown;
