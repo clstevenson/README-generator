@@ -24,12 +24,7 @@ function writeToFile(fileName, data) {
 
   // save the MD file
   fileName = outputDir + '/' + fileName;
-  fs.writeFileSync(fileName, generateMarkdown(data), err => {
-    if (err) {
-      console.log(err);
-      return err;
-    }
-  });
+  fs.writeFileSync(fileName, generateMarkdown(data));
 
   // if there is a screenshot, save it in the appropriate location
   // The screenshot needs to be in the same directory as the app
@@ -106,6 +101,7 @@ function init() {
     },
     { // screenshot: optional but must be in same directory
       type: 'input', name: 'image', message: prompt.image,
+      default: 'screenshot.png',
       validate: value => {
         if (value && !fs.existsSync(value)) {
           return "Couldn't find image. Check spelling and verify it is in this directory."
@@ -125,7 +121,7 @@ function init() {
       const filename = data.title.split(' ').join('') + "-README.md";
       if (data.license === 'none') data.license = '';
       const err = writeToFile(filename, data);
-      if (!err) console.log("Success! README and any supporting files are in the ./Output directory.");
+      if (!err) console.log("Success! README and any supporting files are in the ./output directory.");
     })
     .catch(err => console.log(err));
 }
