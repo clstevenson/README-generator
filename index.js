@@ -101,7 +101,6 @@ function init() {
     },
     { // screenshot: optional but must be in same directory
       type: 'input', name: 'image', message: prompt.image,
-      default: 'screenshot.png',
       validate: value => {
         if (value && !fs.existsSync(value)) {
           return "Couldn't find image. Check spelling and verify it is in this directory."
